@@ -2,6 +2,13 @@ name: 'Deploy on release tag'
 
 on:
   workflow_call:
+    inputs:
+      deployTo:
+        required: true
+        type: string
+      final:
+        required: true
+        type: string
     secrets:
       jenkins_user:
         required: true
@@ -80,4 +87,4 @@ jobs:
           jenkins_use_post_request: 'True'
           job_name: "balenaOS-deploy"
           job_timeout: 14400
-          jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "staging", "final": "no"}'
+          jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ inputs.final }}"}'
