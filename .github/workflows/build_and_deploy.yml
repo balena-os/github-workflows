@@ -79,7 +79,7 @@ jobs:
           echo "Deploying" ${{ matrix.board }}
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
-        uses: alexgg/jenkins-job-action@0.0.9
+        uses: balena-os/jenkins-job-action@0.0.9
         with:
           jenkins_url: "https://jenkins.product-os.io"
           jenkins_user: "${{ secrets.jenkins_user }}"
