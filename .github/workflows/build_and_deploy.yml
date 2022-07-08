@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.set-tag.outputs.tag }}
+      job: ${{ steps.job-name.outputs.job }}
       boards: ${{ steps.list-boards.outputs.boards }}
       status: ${{ join(steps.*.conclusion) }}
     steps:
@@ -46,6 +47,22 @@ jobs:
       - name: 'Set tag'
         id: set-tag
         run: echo "::set-output name=tag::${{ steps.get-latest-tag.outputs.tag }}"
+
+      - name: 'Check ESR release'
+        uses:  actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ steps.get-latest-tag.outputs.tag }}
+          regex: '^v20[0-9][0-9].[0-1]?[1470].[0-9]+$'
+
+      - name: 'Set job name'
+        id: job-name
+        run: |
+          job='balenaOS-deploy'
+          if [ ${{ steps.regex-match.outputs.match }} = ${{ steps.get-latest-tag.outputs.tag }} ]; then
+            job='balenaOS-deploy-ESR'
+          fi
+          echo "::set-output name=job::${job}"
 
       - name: 'Fetch all boards'
         id: list-boards
@@ -76,7 +93,7 @@ jobs:
       - name: Debug
         if: ${{ matrix.board  != null }}
         run: |
-          echo "Deploying" ${{ matrix.board }}
+          echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }}
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
         uses: balena-os/jenkins-job-action@0.0.9
@@ -85,6 +102,6 @@ jobs:
           jenkins_user: "${{ secrets.jenkins_user }}"
           jenkins_token: "${{ secrets.jenkins_token }}"
           jenkins_use_post_request: 'True'
-          job_name: "balenaOS-deploy"
+          job_name: "${{ needs.fetch.outputs.job }}"
           job_timeout: 14400
           jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ inputs.final }}"}'
