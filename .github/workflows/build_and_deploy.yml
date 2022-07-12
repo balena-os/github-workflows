@@ -96,12 +96,12 @@ jobs:
           echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }}
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
-        uses: balena-os/jenkins-job-action@0.0.9
+        uses: balena-os/jenkins-job-action@0.0.10
         with:
           jenkins_url: "https://jenkins.product-os.io"
           jenkins_user: "${{ secrets.jenkins_user }}"
           jenkins_token: "${{ secrets.jenkins_token }}"
           jenkins_use_post_request: 'True'
           job_name: "${{ needs.fetch.outputs.job }}"
-          job_timeout: 14400
+          do_not_wait: '1'
           jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ inputs.final }}"}'
