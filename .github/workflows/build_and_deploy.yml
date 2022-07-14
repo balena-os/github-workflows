@@ -6,9 +6,6 @@ on:
       deployTo:
         required: true
         type: string
-      final:
-        required: true
-        type: string
     secrets:
       jenkins_user:
         required: true
@@ -20,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.set-tag.outputs.tag }}
+      merge_commit: ${{ steps.set-merge-commit.outputs.merge_commit }}
       job: ${{ steps.job-name.outputs.job }}
       boards: ${{ steps.list-boards.outputs.boards }}
       status: ${{ join(steps.*.conclusion) }}
@@ -39,6 +37,12 @@ jobs:
       - name: 'Update local tags'
         id: update-tags
         run: git fetch --tags -f
+
+      - name: 'Fetch merge commit'
+        id: set-merge-commit
+        run: |
+          merge_commit=$(git rev-parse :/"^Merge pull request")
+          echo "::set-output name=merge_commit::${merge_commit}"
 
       - name: 'Fetch latest tag'
         id: get-latest-tag
@@ -90,10 +94,28 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.fetch.outputs.boards)}}
     steps:
+      - name: Check tests status
+        id: check-tests
+        if: ${{ matrix.board  != null }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          COMMIT: ${{ needs.fetch.outputs.merge_commit }}
+        run: |
+          prid=$(gh api -H "Accept: application/vnd.github+json" /repos/$REPO/commits/$COMMIT --jq '.commit.message' | head -n1 | cut -d "#" -f2 | awk '{ print $1}')
+          status_url=$(gh api -H "Accept: application/vnd.github+json" /repos/$REPO/pulls/$prid --jq '._links.statuses.href')
+          testbot_job="testbot-${{ matrix.board }}"
+          passed="no"
+          if curl -sL "${status_url}" | jq -e '.[] | select(.context == "'"${testbot_job}"'") | select(.description == "OS tests have passed\n ")' > /dev/null 2>&1; then
+            passed="yes"
+          fi
+          echo "::set-output name=final::${passed}"
+
       - name: Debug
         if: ${{ matrix.board  != null }}
         run: |
-          echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }}
+          echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }} "as" ${{ steps.check-tests.outputs.final }} "to" ${{ inputs.deployTo }}
+
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
         uses: balena-os/jenkins-job-action@0.0.10
@@ -104,4 +126,4 @@ jobs:
           jenkins_use_post_request: 'True'
           job_name: "${{ needs.fetch.outputs.job }}"
           job_timeout: 14400
-          jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ inputs.final }}"}'
+          jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ steps.check-tests.outputs.final }}"}'
