@@ -103,5 +103,5 @@ jobs:
           jenkins_token: "${{ secrets.jenkins_token }}"
           jenkins_use_post_request: 'True'
           job_name: "${{ needs.fetch.outputs.job }}"
-          do_not_wait: '1'
+          job_timeout: 14400
           jenkins_params: '{"board": "${{ matrix.board }}", "tag": "${{  needs.fetch.outputs.tag }}", "deployTo": "${{ inputs.deployTo }}", "final": "${{ inputs.final }}"}'
