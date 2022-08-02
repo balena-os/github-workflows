@@ -114,7 +114,7 @@ jobs:
       - name: Debug
         if: ${{ matrix.board  != null }}
         run: |
-          echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }} "as" ${{ steps.check-tests.outputs.final }} "to" ${{ inputs.deployTo }}
+          echo "Deploying" ${{ needs.fetch.outputs.job }} "for" ${{ matrix.board }} "with final set as" ${{ steps.check-tests.outputs.final }} "to" ${{ inputs.deployTo }}
 
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
