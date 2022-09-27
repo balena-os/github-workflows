@@ -38,12 +38,6 @@ jobs:
         id: update-tags
         run: git fetch --tags -f
 
-      - name: 'Fetch merge commit'
-        id: set-merge-commit
-        run: |
-          merge_commit=$(git rev-parse :/"^Merge pull request")
-          echo "::set-output name=merge_commit::${merge_commit}"
-
       - name: 'Fetch latest tag'
         id: get-latest-tag
         uses: "actions-ecosystem/action-get-latest-tag@v1"
@@ -51,6 +45,13 @@ jobs:
       - name: 'Set tag'
         id: set-tag
         run: echo "::set-output name=tag::${{ steps.get-latest-tag.outputs.tag }}"
+
+      - name: 'Fetch merge commit'
+        id: set-merge-commit
+        run: |
+          merge_commit=$(git checkout ${{steps.get-latest-tag.outputs.tag}} && git rev-parse :/"^Merge pull request")
+          echo "Found merge commit ${merge_commit}"
+          echo "::set-output name=merge_commit::${merge_commit}"
 
       - name: 'Check ESR release'
         uses:  actions-ecosystem/action-regex-match@v2
