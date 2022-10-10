@@ -6,6 +6,11 @@ on:
       deployTo:
         required: true
         type: string
+      workerType:
+        default: testbot
+        required: true
+        type: string
+        description: Leviathan worker type, can be qemu or testbot.
     secrets:
       jenkins_user:
         required: true
@@ -105,7 +110,7 @@ jobs:
         run: |
           prid=$(gh api -H "Accept: application/vnd.github+json" /repos/$REPO/commits/$COMMIT --jq '.commit.message' | head -n1 | cut -d "#" -f2 | awk '{ print $1}')
           status_url=$(gh api -H "Accept: application/vnd.github+json" /repos/$REPO/pulls/$prid --jq '._links.statuses.href')
-          testbot_job="testbot-${{ matrix.board }}"
+          testbot_job="${{ inputs.workerType }}-${{ matrix.board }}"
           passed="no"
           if curl -sL "${status_url}" | jq -e '.[] | select(.context == "'"${testbot_job}"'") | select(.description == "OS tests have passed\n ")' > /dev/null 2>&1; then
             passed="yes"
