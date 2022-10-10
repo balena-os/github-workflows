@@ -6,9 +6,10 @@ on:
       deployTo:
         required: true
         type: string
+        description: balenaCloud environment to deploy to
       workerType:
         default: testbot
-        required: true
+        required: false
         type: string
         description: Leviathan worker type, can be qemu or testbot.
     secrets:
