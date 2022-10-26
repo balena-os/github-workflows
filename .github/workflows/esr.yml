@@ -1,0 +1,197 @@
+name: 'Create ESR branch and tag'
+
+on:
+  # Run at 00:00 on the second day every 3rd month (quarterly)
+  schedule:
+    - cron: "0 0 2 */3 *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      esr-version:
+        required: false
+        type: string
+        description: ESR version override, for example 2022.10. By default it uses the current year and month.
+      os-version:
+        required: false
+        type: string
+        description: OS ESR version override, for example 2.104. By default it uses the latest ESR branch.
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+    outputs:
+      status: ${{ join(steps.*.conclusion) }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+          fetch-depth: 0
+          ref: 'master'
+          # The default GITHUB_TOKEN does not have workflow scope
+          # This is needed to push a new branch with workflow files
+          token: ${{ secrets.FLOWZONE_TOKEN }}
+
+      - name: 'Only run for device repositories'
+        id: assert-device-repository
+        run: |
+          if [ -f "$(pwd)/repo.yml" ]; then
+            if grep -q "yocto-based OS image" repo.yml; then
+              exit 0
+            fi
+          fi
+          exit 1
+
+      - name: 'Bail out if ESR branch already present'
+        id: check-esr-branch
+        run: |
+          if [ "${{ inputs.esr-version }}" != "" ]; then
+            if ! [[ "${{ inputs.esr-version }}" =~ ^20[0-9][0-9].01|04|07|10$ ]]; then
+              echo "Invalid ESR version ${{ inputs.esr-version }}"
+              exit 1
+            fi
+            esr_version=${{ inputs.esr-version }}
+          else
+            esr_version=$(date '+%Y.%m')
+            if ! [[ "${esr_version}" =~ ^20[0-9][0-9].01|04|07|10$ ]]; then
+              echo "Invalid ESR version ${esr-version}. Please use the esr-version input argument to force one."
+              exit 1
+            fi
+          fi
+          esr_branch="${esr_version}.x"
+          if git ls-remote --exit-code --heads origin ${esr_branch} > /dev/null; then
+            echo "Branch ${esr_branch} already exists"
+            exit 1
+          fi
+          echo "esr_version=${esr_version}.0" >> $GITHUB_OUTPUT
+          echo "esr_branch=${esr_branch}" >> $GITHUB_OUTPUT
+          echo "ESR version: ${esr_version}.0"
+          echo "ESR branch ${esr_branch}"
+
+      - name: 'Select meta-balena ESR branch'
+        id: select-meta-balena-esr-branch
+        run: |
+          pushd layers/meta-balena || true > /dev/null 2>&1
+          if ! grep -q "yocto layer" repo.yml; then
+            echo "Non valid meta-balena layer"
+            exit 1
+          fi
+          # The meta-balena-esr workflow runs the first day of each quarter to create the ESR branch
+          if [ "${{ inputs.os-version }}" != "" ]; then
+            if ! [[ "${{ inputs.os-version }}" =~ ^[0-9]+.[0-9]+$ ]]; then
+              echo "Invalid OS version ${{ inputs.os-version }}"
+              exit 1
+            fi
+            os_esr_base_pattern=${{ inputs.os-version }}.x
+          else
+            os_esr_base_pattern="*.*.x"
+          fi
+          os_esr_branch=$(git branch -r --list origin/${os_esr_base_pattern} --sort=-committerdate | head -n1 | tr -d ' ')
+          bsp_branch_pattern=$(git show remotes/${os_esr_branch}:repo.yml | grep bsp-branch-pattern | cut -d ':' -f2 | tr -d ' ')
+          esr_branch=${{ steps.check-esr-branch.outputs.esr_branch }}
+          if [ "${esr_branch}" != "${bsp_branch_pattern}" ]; then
+            echo "[${esr_branch}] BSP match pattern ${bsp_branch_pattern} mismatch."
+            exit 1
+          fi
+          os_esr_base_version=$(git show remotes/${os_esr_branch}:repo.yml | grep version | awk -F"'" '{print $2}')
+          os_esr_branch="${os_esr_base_version}.x"
+          echo "os_esr_base_version=${os_esr_base_version}" >> $GITHUB_OUTPUT
+          echo "os_esr_branch=${os_esr_branch}" >> $GITHUB_OUTPUT
+          echo "OS ESR base version ${os_esr_base_version} and branch ${os_esr_branch}"
+          popd || true > /dev/null
+
+      - name: 'Select base version'
+        id: select-base
+        run: |
+          git fetch --tags origin
+          os_esr_base_version=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_base_version}}
+          os_esr_branch=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_branch}}
+          esr_base_tag=$(git tag --sort -version:refname | grep ${os_esr_base_version} | head -n1)
+          if [ -z "${esr_base_tag}" ]; then
+            echo "No version based on ${os_esr_base_version}"
+            exit 1
+          fi
+          echo "Base tag: ${esr_base_tag}"
+          git checkout -b ${{ steps.check-esr-branch.outputs.esr_branch }} refs/tags/${esr_base_tag}
+          git submodule update --recursive
+          pushd layers/meta-balena || true > /dev/null 2>&1
+          git checkout -b ${os_esr_branch} ${os_esr_branch}
+          popd || true > /dev/null
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: 'Create ESR branch'
+        id: create-esr-branch
+        run: |
+          # Modify repo.yml
+          python3 <<EOF
+          import sys
+          import yaml
+          filePath = './repo.yml'
+          with open(filePath, 'r') as original:
+              ydata = yaml.safe_load(original)
+          if 'esr' in ydata:
+              # Nothing to do
+              print("ESR branch already configured")
+              sys.exit(1)
+          esr_branch = "${{ steps.check-esr-branch.outputs.esr_branch }}"
+          esrMm = esr_branch[:-2]
+          ydata['esr'] = {'version': esrMm}
+          with open(filePath, 'w') as modified:
+              yaml.dump(ydata, modified)
+          EOF
+          # Modify VERSION
+          python3 <<EOF
+          import yaml
+          import re
+          filePath = "./VERSION"
+          with open(filePath, 'r') as original:
+              data = original.read()
+          (data, count) = re.subn("^\d+\.\d+.\d+(\+rev\d)?$", "${{ steps.check-esr-branch.outputs.esr_version }}", data)
+          if count != 1:
+              raise
+          with open(filePath, 'w') as modified:
+              modified.write(data)
+          EOF
+          # Modify CHANGELOG
+          python3 <<EOF
+          from datetime import date
+          filePath = "./CHANGELOG.md"
+          with open(filePath, 'r') as original:
+              data = original.readlines()
+          if "Change log\n" in data[0]:
+              prefix = data[0:2]
+              content = data[2:]
+              esrVersion = "${{ steps.check-esr-branch.outputs.esr_version }}"
+              date = date.today().strftime('%Y-%m-%d')
+              new = "\n# " + esrVersion + "\n" + \
+                  "## (" + date + ")\n\n* Declare ESR " + esrVersion + "\n"
+              prefix.append(new)
+              prefix.append("".join(content))
+              with open(filePath, 'w') as modified:
+                  modified.write("".join(prefix))
+          EOF
+          git add VERSION CHANGELOG.md repo.yml layers/meta-balena
+          git config --global user.name 'BalenaCI github workflow'
+          git config --global user.email 'balenaci@balena.io'
+          git commit -F- <<-EOF
+          Declare ESR ${{ steps.check-esr-branch.outputs.esr_version }}
+
+          Change-type: none
+          EOF
+          esr_branch=${{ steps.check-esr-branch.outputs.esr_branch }}
+          git tag -a -m "v${{ steps.check-esr-branch.outputs.esr_version }}: Declare ESR ${esr_branch:0:-2}" v${{ steps.check-esr-branch.outputs.esr_version }}
+          git push origin refs/heads/${{ steps.check-esr-branch.outputs.esr_branch }}
+          git push origin refs/tags/v${{ steps.check-esr-branch.outputs.esr_version }}
+
