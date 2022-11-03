@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add ESR workflow
+      hash: 606000d8439c6c97cc4a8dd95431fbadbd1251d8
+      body: |
+        This workflow will create an ESR branch every quarter.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.14
+  title: ""
+  date: 2022-11-03T14:45:30.120Z
+- commits:
     - subject: Switch balenaCI to flowzone
       hash: dbb331c6f18e61fde120e4ba527c6dca1fd2c1a8
       body: ""
