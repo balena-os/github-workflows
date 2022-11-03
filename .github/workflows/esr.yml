@@ -1,10 +1,6 @@
 name: 'Create ESR branch and tag'
 
 on:
-  # Run at 00:00 on the second day every 3rd month (quarterly)
-  schedule:
-    - cron: "0 0 2 */3 *"
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
