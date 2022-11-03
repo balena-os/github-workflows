@@ -1,4 +1,20 @@
 - commits:
+    - subject: "esr: Removed schedule"
+      hash: 532efe6be99343bdf27b05a7fd81a63dc056bcb6
+      body: |
+        The on schedule will be set on each device repository that uses this
+        workflow.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.15
+  title: ""
+  date: 2022-11-03T14:58:53.868Z
+- commits:
     - subject: Add ESR workflow
       hash: 606000d8439c6c97cc4a8dd95431fbadbd1251d8
       body: |
