@@ -1,0 +1,251 @@
+- commits:
+    - subject: Switch balenaCI to flowzone
+      hash: dbb331c6f18e61fde120e4ba527c6dca1fd2c1a8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.13
+  title: ""
+  date: 2022-11-03T14:39:06.824Z
+- version: 0.0.12
+  date: 2022-10-10T17:07:45Z
+  commits:
+    - hash: a6a9c51d25948a3aea49842329933feef2984b22
+      author: Alex Gonzalez
+      footers:
+        change-type: patch
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      subject: "workflows: build_and_deploy: use a single prefix for test jobs"
+      body: >-
+        Test jobs used to be prefixed by either `testbot` or `qemu` to represent
+
+        either physical or virtual environments.
+
+        This change uses a customizable unique job prefix that defaults to `test`
+
+        that will be used to define whether to release as final, abstracting the
+
+        actual run environment from the decision.
+- version: 0.0.11
+- date: 2022-10-10T10:00:24Z
+- commits:
+    - hash: 9b84fd9edabb81f9aa3b5ca679132a681f63f85b
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Identify merge commit after checking out latest tag"
+- commits:
+    - body: |-
+        There has been race conditions where the merge commit found did not
+        correspond to the merged tag, so make sure the repository is at the
+        place we expect it to be before looking for the last merge commit.
+- commits:
+    - hash: 74c2ea464e1cc07b8d7c33c954ad6de53a5c25d6
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: add workerType input argument"
+- commits:
+    - body: |-
+        This allows to configure the deploy job names as
+        `<workerType>-<machine-name>`.
+- commits:
+    - hash: 10b6def9f683e4cbc7d5b8cc504c5c581a686bcf
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Add description to deployTo input argument"
+- commits:
+    - body: null
+- version: 0.0.10
+- date: 2022-08-02T09:17:45Z
+- commits:
+    - hash: 19f4df88f0ce66bf674dc3c6e1bcbf84dbff2372
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Ammend debug message"
+- commits:
+    - body: Aesthetic change to clear the debug message.
+- version: 0.0.9
+- date: 2022-07-18T13:05:18Z
+- commits:
+    - hash: d644434080914e804a3eb1cd3b799b25a630b5a5
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Set final flag according to tests status"
+- commits:
+    - body: >-
+        We can navigate from the commit triggering the deploy event to the merged
+
+        pull request before the tag, and check the statuses for a specific board
+
+        to see if the tests are passed.
+
+        We can then use that to deploy a final release.
+- version: 0.0.8
+- date: 2022-07-15T09:28:59Z
+- commits:
+    - hash: b08e5fbe03ee0c192607fc51b0a45cf320c509da
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Keep waiting for jobs to complete"
+- commits:
+    - body: |-
+        Using the Yocto cache jobs take between 10/15' to complete, and it's
+        nice to see workflow status reflecting the builds output.
+        Unless the hosted processing time spikes up let's keep this setting.
+- version: 0.0.7
+- date: 2022-07-12T14:25:09Z
+- commits:
+    - hash: 0f86c61b79310e542a5bc9486004915384bc309d
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: Do not wait for Jenkins jobs to complete
+- commits:
+    - body: |-
+        Waiting for long running Jenkins jobs to complete is a waste of github
+        hosted processing time.
+- version: 0.0.6
+- date: 2022-07-08T12:12:01Z
+- commits:
+    - hash: 136acb007187c74a9aef5b7c90371a3034026ea3
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Adapt for ESR releases"
+- commits:
+    - body: |-
+        Parse the latest tag and call an ESR deploy job if it matches an ESR
+        tag.
+- version: 0.0.5
+- date: 2022-05-27T17:36:18Z
+- commits:
+    - hash: 3cb115a6350f78003a88cf80ab7ab3c4aecc757c
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "workflows: build_and_deploy: Pull action from balena-os"
+- commits:
+    - body: |-
+        Stop using a fork in my personal repository and use a fork in balena-os
+        instead. Once my PR to the upstream repo is merged, we can revert to
+        using upstream.
+- version: 0.0.4
+- date: 2022-05-27T17:17:18Z
+- commits:
+    - hash: 11ed17ed7e3944ad3ec2c1510fea4d30121f2e47
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "workflows: build_and_deploy: Parametrize environment and finalize"
+- commits:
+    - body: |-
+        Allow the caller to specify the cloud environment to deploy to as well
+        as whether to finalize the release.
+- version: 0.0.3
+- date: 2022-05-27T14:36:39Z
+- commits:
+    - hash: f3bc033100b32a4eece41c373ab19268d787864d
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: "build_and_deploy: Don't specify the on events, and require secrets
+        input"
+- commits:
+    - body: |-
+        Let the caller specify both the on event and the workflow_dispatch that
+        allows running it from the github repository actions tab.
+        Also, pass the secrets for the caller.
+- version: 0.0.2
+- date: 2022-05-27T13:55:43Z
+- commits:
+    - hash: 947e249f8466af4bcaf04ffe277e2f71012b9cfb
+- commits:
+    - author: Alex Gonzalez
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+- commits:
+    - subject: Add build_and_deploy workflow
+- commits:
+    - body: |-
+        This is to be used by device types to automatically build and deploy
+        releases on repository tagging.
