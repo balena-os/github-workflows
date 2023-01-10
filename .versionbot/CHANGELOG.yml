@@ -1,4 +1,19 @@
 - commits:
+    - subject: "esr: remove dispatch event from re-usable workflow"
+      hash: cc9f80d04b0c49eb633b89bdd4a412e773ea4cce
+      body: |
+        The dispatch event belongs on the calling workflows.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.17
+  title: ""
+  date: 2023-01-10T15:04:36.220Z
+- commits:
     - subject: "esr: Allow it to be re-usable"
       hash: 86a3b55bf2277b011b4222bf55c599816c3cc9dc
       body: |
