@@ -1,4 +1,20 @@
 - commits:
+    - subject: "esr: Allow it to be re-usable"
+      hash: 86a3b55bf2277b011b4222bf55c599816c3cc9dc
+      body: |
+        Add a workflow_call on event so it can be reused by multiple device
+        repositories.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.16
+  title: ""
+  date: 2023-01-10T14:45:11.838Z
+- commits:
     - subject: "esr: Removed schedule"
       hash: 532efe6be99343bdf27b05a7fd81a63dc056bcb6
       body: |
