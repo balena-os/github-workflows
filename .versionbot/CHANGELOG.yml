@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows: esr: use semver versioning"
+      hash: 62dfc224e41b14c421cb3ba70254da746eda2b36
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.18
+  title: ""
+  date: 2023-01-14T19:29:29.875Z
+- commits:
     - subject: "esr: remove dispatch event from re-usable workflow"
       hash: cc9f80d04b0c49eb633b89bdd4a412e773ea4cce
       body: |
