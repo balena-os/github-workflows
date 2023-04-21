@@ -1,4 +1,18 @@
 - commits:
+    - subject: "esr: fix pattern for multi-digit revisions"
+      hash: 3b83d9233df1dc4d890795950f445d8b6ef09af5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.19
+  title: ""
+  date: 2023-04-21T10:10:37.250Z
+- commits:
     - subject: "workflows: esr: use semver versioning"
       hash: 62dfc224e41b14c421cb3ba70254da746eda2b36
       body: ""
