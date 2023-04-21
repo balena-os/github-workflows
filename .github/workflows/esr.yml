@@ -153,7 +153,7 @@ jobs:
           filePath = "./VERSION"
           with open(filePath, 'r') as original:
               data = original.read()
-          (data, count) = re.subn("^\d+\.\d+.\d+(\+rev\d)?$", "${{ steps.check-esr-branch.outputs.esr_version }}", data)
+          (data, count) = re.subn("^\d+\.\d+.\d+(\+rev\d+)?$", "${{ steps.check-esr-branch.outputs.esr_version }}", data)
           if count != 1:
               raise
           with open(filePath, 'w') as modified:
