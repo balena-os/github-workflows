@@ -1,4 +1,23 @@
 - commits:
+    - subject: ".github/workflows: Replace GitHub PAT with ephemeral app tokens"
+      hash: 57c3bf0a84bfdeaf6cacde39b314c9c23a9fa64d
+      body: |
+        GitHub App installation tokens are short-lived and do not
+        need to be rotated the same way PATs do.
+
+        The default app ID and installation ID correspond to
+        flowzone-bot[app] installed in the balena-os Org.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.0.20
+  title: ""
+  date: 2023-07-14T13:23:20.193Z
+- commits:
     - subject: "esr: fix pattern for multi-digit revisions"
       hash: 3b83d9233df1dc4d890795950f445d8b6ef09af5
       body: ""
@@ -202,7 +221,8 @@
     - subject: "build_and_deploy: Set final flag according to tests status"
 - commits:
     - body: >-
-        We can navigate from the commit triggering the deploy event to the merged
+        We can navigate from the commit triggering the deploy event to the
+        merged
 
         pull request before the tag, and check the statuses for a specific board
 
