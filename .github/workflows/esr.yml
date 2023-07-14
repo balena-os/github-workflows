@@ -21,6 +21,27 @@ jobs:
     outputs:
       status: ${{ join(steps.*.conclusion) }}
     steps:
+      - name: Generate GitHub App installation token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        continue-on-error: true
+        id: gh_app_token
+        with:
+          app_id: ${{ vars.APP_ID || '291899' }}
+          installation_id: ${{ vars.INSTALLATION_ID || '34046907' }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          permissions: >-
+            {
+              "actions": "read",
+              "administration": "read",
+              "checks": "read",
+              "contents": "write",
+              "members": "read",
+              "metadata": "read",
+              "pull_requests": "write",
+              "statuses": "read",
+              "workflows": "read"
+            }
+
       - uses: actions/checkout@v3
         with:
           submodules: "recursive"
@@ -28,7 +49,7 @@ jobs:
           ref: 'master'
           # The default GITHUB_TOKEN does not have workflow scope
           # This is needed to push a new branch with workflow files
-          token: ${{ secrets.FLOWZONE_TOKEN }}
+          token: ${{ steps.gh_app_token.outputs.token }}
 
       - name: 'Only run for device repositories'
         id: assert-device-repository
@@ -178,8 +199,8 @@ jobs:
                   modified.write("".join(prefix))
           EOF
           git add VERSION CHANGELOG.md repo.yml layers/meta-balena
-          git config --global user.name 'BalenaCI github workflow'
-          git config --global user.email 'balenaci@balena.io'
+          git config --global user.name 'flowzone-app[bot]'
+          git config --global user.email '124931076+flowzone-app[bot]@users.noreply.github.com'
           git commit -F- <<-EOF
           Declare ESR ${{ steps.check-esr-branch.outputs.esr_version }}
 
