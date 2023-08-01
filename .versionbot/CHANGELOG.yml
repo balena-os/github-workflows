@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove excessive permissions from app token
+      hash: e527d8d98be53229408dfcd33b8bdff8717d4fab
+      body: |
+        These permissions have already been removed from
+        flowzone-app[bot] so requesting them at runtime will fail.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kyle Harding
+      nested: []
+  version: 0.0.21
+  title: ""
+  date: 2023-08-01T17:51:31.739Z
+- commits:
     - subject: ".github/workflows: Replace GitHub PAT with ephemeral app tokens"
       hash: 57c3bf0a84bfdeaf6cacde39b314c9c23a9fa64d
       body: |
