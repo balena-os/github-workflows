@@ -1,4 +1,18 @@
 - commits:
+    - subject: build_and_deploy:use authenticate curl to status url
+      hash: 9994158d341bbbd05cbf497ed58506a04e0ec37e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 0.0.22
+  title: ""
+  date: 2023-09-18T14:20:26.507Z
+- commits:
     - subject: Remove excessive permissions from app token
       hash: e527d8d98be53229408dfcd33b8bdff8717d4fab
       body: |
