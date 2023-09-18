@@ -113,7 +113,7 @@ jobs:
           status_url=$(gh api -H "Accept: application/vnd.github+json" /repos/$REPO/pulls/$prid --jq '._links.statuses.href')
           job_prefix="${{ inputs.testJobPrefix }}-${{ matrix.board }}"
           passed="no"
-          if curl -sL "${status_url}" | jq -e '.[] | select(.context == "'"${job_prefix}"'") | select(.description == "OS tests have passed\n ")' > /dev/null 2>&1; then
+          if curl -sL "${status_url}" --header "Authorization: Bearer $GH_TOKEN" | jq -e '.[] | select(.context == "'"${job_prefix}"'") | select(.description == "OS tests have passed\n ")' > /dev/null 2>&1; then
             passed="yes"
           fi
           echo "::set-output name=final::${passed}"
