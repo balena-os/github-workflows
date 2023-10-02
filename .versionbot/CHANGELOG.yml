@@ -1,4 +1,25 @@
 - commits:
+    - subject: "workflows: Switch to balenaOS ESR [bot] for authentication Flowzone
+        App no longer has workflow:write permissions for security reasons."
+      hash: 6a7caa5630af7b40b7c44217fe2ac4598f670fa7
+      body: >
+        This new balenaOS ESR bot has contents:write and workflows:write
+        permissions
+
+        but is only available on balenaOS repositories.
+      footer:
+        See: https://github.com/apps/balenaos-esr
+        see: https://github.com/apps/balenaos-esr
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.0.23
+  title: ""
+  date: 2023-10-02T16:46:33.903Z
+- commits:
     - subject: build_and_deploy:use authenticate curl to status url
       hash: 9994158d341bbbd05cbf497ed58506a04e0ec37e
       body: ""
