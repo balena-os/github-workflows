@@ -1,4 +1,23 @@
 - commits:
+    - subject: "workflows: esr: qualify ESR branch matching patterns"
+      hash: 5306efefe48d99daf2d9856f661417998c18fb62
+      body: |
+        Make the meta-balena ESR branch pattern start with a digit to limit
+        clashes with random branches.
+
+        Also, sort matches by version instead of committer date as it may be
+        the case that an older ESR branch gets newer commits.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.27
+  title: ""
+  date: 2024-03-02T16:22:06.891Z
+- commits:
     - subject: "esr: use workflows syntax for inputs"
       hash: 784aafc05dbdcab69c05e1f7fcdfd8e483b40d77
       body: |
