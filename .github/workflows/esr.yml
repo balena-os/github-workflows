@@ -101,9 +101,9 @@ jobs:
             fi
             os_esr_base_pattern=${{ github.event.inputs.os-version }}.x
           else
-            os_esr_base_pattern="*.*.x"
+            os_esr_base_pattern="[0-9]*.[0-9]*.x"
           fi
-          os_esr_branch=$(git branch -r --list origin/${os_esr_base_pattern} --sort=-committerdate | head -n1 | tr -d ' ')
+          os_esr_branch=$(git branch -r --list origin/${os_esr_base_pattern} --sort=-version:refname | head -n1 | tr -d ' ')
           bsp_branch_pattern=$(git show remotes/${os_esr_branch}:repo.yml | grep bsp-branch-pattern | cut -d ':' -f2 | tr -d ' ')
           esr_branch=${{ steps.check-esr-branch.outputs.esr_branch }}
           if [ "${esr_branch}" != "${bsp_branch_pattern}" ]; then
