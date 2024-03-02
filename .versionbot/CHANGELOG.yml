@@ -1,4 +1,20 @@
 - commits:
+    - subject: "esr: use workflows syntax for inputs"
+      hash: 784aafc05dbdcab69c05e1f7fcdfd8e483b40d77
+      body: |
+        On workflow dispatch actions, the inputs are access via the event
+        context.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.26
+  title: ""
+  date: 2024-03-02T15:26:47.191Z
+- commits:
     - subject: "esr: qualify ESR base tag to start with base version"
       hash: 130834844003e52b933c4e2ca9e10d8d6a0fbb56
       body: ""
