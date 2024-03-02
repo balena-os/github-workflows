@@ -28,7 +28,7 @@ jobs:
       boards: ${{ steps.list-boards.outputs.boards }}
       status: ${{ join(steps.*.conclusion) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: 'Only run for device repositories'
         id: assert-device-repository
@@ -46,7 +46,7 @@ jobs:
 
       - name: 'Fetch latest tag'
         id: get-latest-tag
-        uses: "actions-ecosystem/action-get-latest-tag@v1"
+        uses: "actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435" # v1
 
       - name: 'Set tag'
         id: set-tag
@@ -125,7 +125,7 @@ jobs:
 
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
-        uses: balena-os/jenkins-job-action@0.0.10
+        uses: balena-os/jenkins-job-action@73be3ec1c06883f0c65b0f452f5463283aa35734 # 0.0.10
         with:
           jenkins_url: "https://jenkins.product-os.io"
           jenkins_user: "${{ secrets.jenkins_user }}"
