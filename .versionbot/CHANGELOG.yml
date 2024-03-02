@@ -1,4 +1,19 @@
 - commits:
+    - subject: "esr: use workflows syntax instead of actions"
+      hash: 16c7c6d6ee2978f3107d7de123573898f731a8d2
+      body: |
+        For workflows, you refer to inputs as `github.events.inputs`.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.26
+  title: ""
+  date: 2024-03-02T14:31:19.913Z
+- commits:
     - subject: "esr: qualify ESR base tag to start with base version"
       hash: 130834844003e52b933c4e2ca9e10d8d6a0fbb56
       body: ""
