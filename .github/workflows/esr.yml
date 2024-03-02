@@ -62,12 +62,12 @@ jobs:
       - name: 'Bail out if ESR branch already present'
         id: check-esr-branch
         run: |
-          if [ "${{ inputs.esr-version }}" != "" ]; then
-            if ! [[ "${{ inputs.esr-version }}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
-              echo "Invalid ESR version ${{ inputs.esr-version }}"
+          if [ "${{ github.events.inputs.esr-version }}" != "" ]; then
+            if ! [[ "${{ github.events.inputs.esr-version }}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
+              echo "Invalid ESR version ${{ github.events.inputs.esr-version }}"
               exit 1
             fi
-            esr_version=${{ inputs.esr-version }}
+            esr_version=${{ github.events.inputs.esr-version }}
           else
             esr_version="$(date '+%Y').$(echo $(date '+%m') | sed "s/^0*//")"
             if ! [[ "${esr_version}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
@@ -94,12 +94,12 @@ jobs:
             exit 1
           fi
           # The meta-balena-esr workflow runs the first day of each quarter to create the ESR branch
-          if [ "${{ inputs.os-version }}" != "" ]; then
-            if ! [[ "${{ inputs.os-version }}" =~ ^[0-9]+.[0-9]+$ ]]; then
-              echo "Invalid OS version ${{ inputs.os-version }}"
+          if [ "${{ github.events.inputs.os-version }}" != "" ]; then
+            if ! [[ "${{ github.events.inputs.os-version }}" =~ ^[0-9]+.[0-9]+$ ]]; then
+              echo "Invalid OS version ${{ github.events.inputs.os-version }}"
               exit 1
             fi
-            os_esr_base_pattern=${{ inputs.os-version }}.x
+            os_esr_base_pattern=${{ github.events.inputs.os-version }}.x
           else
             os_esr_base_pattern="*.*.x"
           fi
