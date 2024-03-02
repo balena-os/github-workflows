@@ -123,7 +123,7 @@ jobs:
           git fetch --tags origin
           os_esr_base_version=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_base_version}}
           os_esr_branch=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_branch}}
-          esr_base_tag=$(git tag --sort -version:refname | grep ${os_esr_base_version} | head -n1)
+          esr_base_tag=$(git tag --sort -version:refname | grep "^v${os_esr_base_version}" | head -n1)
           if [ -z "${esr_base_tag}" ]; then
             echo "No version based on ${os_esr_base_version}"
             exit 1
