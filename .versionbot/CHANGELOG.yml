@@ -1,4 +1,18 @@
 - commits:
+    - subject: "esr: qualify ESR base tag to start with base version"
+      hash: 130834844003e52b933c4e2ca9e10d8d6a0fbb56
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 0.0.25
+  title: ""
+  date: 2024-03-02T14:07:48.621Z
+- commits:
     - subject: Update git author to match bot
       hash: 9f01e2722dc1d119ac252b09988218912677830e
       body: ""
