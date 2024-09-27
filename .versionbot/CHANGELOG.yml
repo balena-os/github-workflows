@@ -1,4 +1,16 @@
 - commits:
+    - subject: "CI: Update checkout settings"
+      hash: d9b6c41acd9e8864279f5c2d197ba2ea2e866bf8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 0.0.28
+  title: ""
+  date: 2024-09-27T19:37:32.963Z
+- commits:
     - subject: "workflows: esr: qualify ESR branch matching patterns"
       hash: 5306efefe48d99daf2d9856f661417998c18fb62
       body: |
@@ -247,7 +259,8 @@
 
         either physical or virtual environments.
 
-        This change uses a customizable unique job prefix that defaults to `test`
+        This change uses a customizable unique job prefix that defaults to
+        `test`
 
         that will be used to define whether to release as final, abstracting the
 
