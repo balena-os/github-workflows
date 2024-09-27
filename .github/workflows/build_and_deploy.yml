@@ -29,6 +29,8 @@ jobs:
       status: ${{ join(steps.*.conclusion) }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: 'Only run for device repositories'
         id: assert-device-repository
