@@ -52,14 +52,14 @@ jobs:
 
       - name: 'Set tag'
         id: set-tag
-        run: echo "::set-output name=tag::${{ steps.get-latest-tag.outputs.tag }}"
+        run: echo "tag=${{ steps.get-latest-tag.outputs.tag }}" >> "${GITHUB_OUTPUT}"
 
       - name: 'Fetch merge commit'
         id: set-merge-commit
         run: |
           merge_commit=$(git checkout ${{steps.get-latest-tag.outputs.tag}} && git rev-parse :/"^Merge pull request")
           echo "Found merge commit ${merge_commit}"
-          echo "::set-output name=merge_commit::${merge_commit}"
+          echo "merge_commit=${merge_commit}" >> "${GITHUB_OUTPUT}"
 
       - name: 'Check ESR release'
         uses:  actions-ecosystem/action-regex-match@v2
@@ -75,7 +75,7 @@ jobs:
           if [ ${{ steps.regex-match.outputs.match }} = ${{ steps.get-latest-tag.outputs.tag }} ]; then
             job='balenaOS-deploy-ESR'
           fi
-          echo "::set-output name=job::${job}"
+          echo "job=${job}" >> "${GITHUB_OUTPUT}"
 
       - name: 'Fetch all boards'
         id: list-boards
@@ -84,7 +84,7 @@ jobs:
           sudo apt update
           sudo apt install moreutils
           git submodule update --init -- balena-yocto-scripts
-          $(pwd)/balena-yocto-scripts/build/build-device-type-json.sh || (echo "Could not generate .json file(s)." && exit 1)
+          "$(pwd)"/balena-yocto-scripts/build/build-device-type-json.sh || (echo "Could not generate .json file(s)." && exit 1)
           tmpfile=$(mktemp)
           cat << 'EOF' > "${tmpfile}"
           { "include": [] }
@@ -93,7 +93,7 @@ jobs:
           for board in ${board_list}; do
             jq -c --arg board "${board}" '.include[.include | length] |= . + {"board": $board}' "${tmpfile}" | sponge "${tmpfile}"
           done
-          echo "::set-output name=boards::$(cat ${tmpfile})"
+          echo "boards=$(cat ${tmpfile})" >> "${GITHUB_OUTPUT}"
           rm "${tmpfile}"
 
   deploy:
@@ -118,7 +118,7 @@ jobs:
           if curl -sL "${status_url}" --header "Authorization: Bearer $GH_TOKEN" | jq -e '.[] | select(.context == "'"${job_prefix}"'") | select(.description == "OS tests have passed\n ")' > /dev/null 2>&1; then
             passed="yes"
           fi
-          echo "::set-output name=final::${passed}"
+          echo "final=${passed}" >> "${GITHUB_OUTPUT}"
 
       - name: Debug
         if: ${{ matrix.board  != null }}
