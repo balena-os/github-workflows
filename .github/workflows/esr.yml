@@ -137,7 +137,7 @@ jobs:
           popd || true > /dev/null
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3 # v5
         with:
           python-version: ${{ matrix.python-version }}
 
