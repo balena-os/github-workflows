@@ -1,4 +1,34 @@
 - commits:
+    - subject: "ESR: Use GitHub REST API for verified commits with submodule support"
+      hash: 141cc22cfdf463289ca8d5636a8fc17d7b279e9f
+      body: |
+        Replace local git commands with GitHub REST API calls to create verified
+        (signed) commits from the GitHub App bot. This approach properly handles
+        the meta-balena submodule which requires mode 160000 and type commit in
+        tree entries.
+
+        Changes:
+        - Switch to actions/create-github-app-token for token generation
+        - Use GitHub API for all git operations:
+          - getRef with 404 handling to check branch existence
+          - createRef to create branch before committing
+          - createBlob/createTree for files and submodule
+          - createCommit and updateRef for the versioned commit
+          - createTag and createRef for the annotated tag
+        - Remove GIT_AUTHOR/COMMITTER env vars (API uses app identity)
+        - Add ESR_BOT_PRIVATE_KEY as required workflow secret
+        - Split monolithic step into focused, documented steps
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.1.0
+  title: ""
+  date: 2026-01-20T09:37:12.404Z
+- commits:
     - subject: "CI: Update checkout settings"
       hash: d9b6c41acd9e8864279f5c2d197ba2ea2e866bf8
       body: ""
