@@ -48,7 +48,7 @@ jobs:
 
       - name: 'Fetch latest tag'
         id: get-latest-tag
-        uses: "actions-ecosystem/action-get-latest-tag@v1"
+        uses: "actions-ecosystem/action-get-latest-tag@b7c32daec3395a9616f88548363a42652b22d435" # v1
 
       - name: 'Set tag'
         id: set-tag
@@ -62,7 +62,7 @@ jobs:
           echo "merge_commit=${merge_commit}" >> "${GITHUB_OUTPUT}"
 
       - name: 'Check ESR release'
-        uses:  actions-ecosystem/action-regex-match@v2
+        uses:  actions-ecosystem/action-regex-match@9e6c4fb3d5e898f505be7a1fb6e7b0a278f6665b # v2
         id: regex-match
         with:
           text: ${{ steps.get-latest-tag.outputs.tag }}
@@ -127,7 +127,7 @@ jobs:
 
       - name: Triggers a deploy job
         if: ${{ matrix.board  != null }}
-        uses: balena-os/jenkins-job-action@0.0.10
+        uses: balena-os/jenkins-job-action@73be3ec1c06883f0c65b0f452f5463283aa35734 # 0.0.10
         with:
           jenkins_url: "https://jenkins.product-os.io"
           jenkins_user: "${{ secrets.jenkins_user }}"
