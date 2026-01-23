@@ -1,4 +1,4 @@
 {
-  "schema": "https://docs.renovatebot.com/renovate-config-schema.json",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>balena-io/renovate-config"]
 }
