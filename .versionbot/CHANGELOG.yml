@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update Pin dependencies
+      hash: 358b51b23e0901f3451439efacaa5d44f56cf537
+      body: |
+        Update actions-ecosystem/action-get-latest-tag
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.2
+  title: ""
+  date: 2026-01-23T17:06:23.949Z
+- commits:
     - subject: "renovate: Fix broken config"
       hash: 308a42e7b010b84479c4febdb82533b64eeb4ea3
       body: ""
