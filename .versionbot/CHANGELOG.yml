@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Fix broken config"
+      hash: 308a42e7b010b84479c4febdb82533b64eeb4ea3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.1.1
+  title: ""
+  date: 2026-01-23T17:02:20.936Z
+- commits:
     - subject: "ESR: Use GitHub REST API for verified commits with submodule support"
       hash: 141cc22cfdf463289ca8d5636a8fc17d7b279e9f
       body: |
