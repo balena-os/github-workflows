@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to a309ff8
+      hash: 894d77341179e77107cf54d3286059add7a5a27b
+      body: |
+        Update actions/setup-python
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.3
+  title: ""
+  date: 2026-01-24T01:20:22.927Z
+- commits:
     - subject: Update Pin dependencies
       hash: 358b51b23e0901f3451439efacaa5d44f56cf537
       body: |
