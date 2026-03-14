@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/create-github-app-token action to v3
+      hash: 087398ac4454f61c9e7ab547e6978ed4e25eec4f
+      body: |
+        Update actions/create-github-app-token from 2.2.2 to 3.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.6
+  title: ""
+  date: 2026-03-14T03:38:51.490Z
+- commits:
     - subject: Update actions/create-github-app-token action to v2.2.2
       hash: 8028d9cc8db5150717e2247b2a76a8b4e2e99f45
       body: |
