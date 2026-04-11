@@ -81,7 +81,7 @@ jobs:
           echo "ESR branch ${esr_branch}"
 
       - name: Check if ESR branch already exists
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           REF: heads/${{ steps.validate-inputs.outputs.esr_branch }}
         with:
@@ -104,7 +104,7 @@ jobs:
             }
 
       - name: Check if ESR tag already exists
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           REF: tags/v${{ steps.validate-inputs.outputs.esr_version }}
         with:
@@ -253,7 +253,7 @@ jobs:
         env:
           REF: refs/heads/${{ steps.validate-inputs.outputs.esr_branch }}
           SHA: ${{ steps.checkout.outputs.commit }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: json
@@ -273,7 +273,7 @@ jobs:
         id: create_tree
         env:
           PARENT_COMMIT_SHA: ${{ steps.checkout.outputs.commit }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           script: |
@@ -333,7 +333,7 @@ jobs:
         env:
           TREE_SHA: ${{ steps.create_tree.outputs.sha }}
           PARENT_COMMIT_SHA: ${{ steps.checkout.outputs.commit }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           script: |
@@ -355,7 +355,7 @@ jobs:
         env:
           REF: heads/${{ steps.validate-inputs.outputs.esr_branch }}
           SHA: ${{ steps.create_commit.outputs.sha }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           script: |
@@ -374,7 +374,7 @@ jobs:
           TAG: v${{ steps.validate-inputs.outputs.esr_version }}
           MESSAGE: Declare ESR ${{ steps.validate-inputs.outputs.esr_version }}
           SHA: ${{ steps.create_commit.outputs.sha }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: json
@@ -395,7 +395,7 @@ jobs:
         env:
           REF: refs/tags/v${{ steps.validate-inputs.outputs.esr_version }}
           SHA: ${{ steps.create_tag.outputs.sha }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: json
