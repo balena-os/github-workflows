@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/github-script action to v9
+      hash: e12cffbcb02ae542e8921e9f77c5dc62fd8b61b6
+      body: |
+        Update actions/github-script from 8.0.0 to 9.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.8
+  title: ""
+  date: 2026-04-11T05:25:44.719Z
+- commits:
     - subject: Update actions/create-github-app-token action to v3.1.0
       hash: 535093d3be4ca04977a4755e0b556db1bdd36507
       body: |
