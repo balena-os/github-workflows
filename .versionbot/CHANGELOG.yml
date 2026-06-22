@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add step to decode GitHub App private key
+      hash: b5ed05a8d9e1b52e9d25a8a49132b02f4959c2ca
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kyle Harding
+      nested: []
+  version: 0.1.11
+  title: ""
+  date: 2026-06-22T15:02:53.164Z
+- commits:
     - subject: Update actions/create-github-app-token action to v3.2.0
       hash: ec7b8ddd94f43e643946089d6cb3f913af339343
       body: |
