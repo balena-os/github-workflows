@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update GitHub Actions
+      hash: 8cee374cba3d2242394ccd1c04ffabde6e3aa966
+      body: |
+        Update actions/checkout
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.12
+  title: ""
+  date: 2026-07-20T19:25:12.486Z
+- commits:
     - subject: Add step to decode GitHub App private key
       hash: b5ed05a8d9e1b52e9d25a8a49132b02f4959c2ca
       body: ""
