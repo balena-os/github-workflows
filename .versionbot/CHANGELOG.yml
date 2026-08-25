@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update flowzonify to v0.4.0
+      hash: d25db508c42955be48bd0d1d7cf7c8c3bf67ba82
+      body: |
+        Update flowzonify from 0.0.0 to 0.4.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.13
+  title: ""
+  date: 2026-08-25T15:21:35.802Z
+- commits:
     - subject: Update GitHub Actions
       hash: 8cee374cba3d2242394ccd1c04ffabde6e3aa966
       body: |
