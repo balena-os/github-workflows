@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/create-github-app-token action to v3.3.0
+      hash: 75622ecbf0b662d3aaa8f0e25ba67b1ecc69c750
+      body: |
+        Update actions/create-github-app-token from 3.2.0 to 3.3.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 0.1.14
+  title: ""
+  date: 2026-10-17T01:27:26.758Z
+- commits:
     - subject: Update flowzonify to v0.4.0
       hash: d25db508c42955be48bd0d1d7cf7c8c3bf67ba82
       body: |
