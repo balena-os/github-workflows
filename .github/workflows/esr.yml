@@ -25,7 +25,7 @@ jobs:
     outputs:
       status: ${{ join(steps.*.conclusion) }}
     steps:
-    
+
       - name: Decode the GitHub App Private Key
         id: decode
         shell: bash
@@ -64,7 +64,7 @@ jobs:
             echo "$private_key"
             echo "${delimiter}"
           } >> "$GITHUB_OUTPUT"
-          
+
       # https://github.com/actions/create-github-app-token
       - name: Generate GitHub App installation token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
@@ -75,6 +75,10 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
 
+      # Master is checked out only to provide the repository contents and the
+      # tools used by the steps below. The ESR branch is NOT based on master:
+      # its base is the highest tag matching the target meta-balena major.minor
+      # (see "Select base version").
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         id: checkout
         with:
@@ -198,23 +202,47 @@ jobs:
           echo "OS ESR base version ${os_esr_base_version} and branch ${os_esr_branch}"
           popd || true > /dev/null
 
+      # Pick the highest tag of this repository whose major.minor matches the
+      # target meta-balena version (for example v7.9.0 for 7.9.x). That tag's
+      # commit becomes the parent of the "Declare ESR" commit, and the base of
+      # the ESR branch. Submodules stay at the commits pinned by that tag,
+      # except layers/meta-balena, which is pinned to the tip of its ESR branch
+      # (for example origin/7.9.x). The local checkout below is only used to
+      # produce the VERSION, CHANGELOG.md and repo.yml changes that are
+      # committed on top of the tag through the GitHub API.
       - name: "Select base version"
         id: select-base
         run: |
           git fetch --tags origin
           os_esr_base_version=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_base_version}}
           os_esr_branch=${{ steps.select-meta-balena-esr-branch.outputs.os_esr_branch}}
-          esr_base_tag=$(git tag --sort -version:refname | grep "^v${os_esr_base_version}" | head -n1)
+          # Escape the dots so that 7.9 does not match 7x9 or 7.90
+          base_regex=$(printf '%s' "${os_esr_base_version}" | sed 's/\./\\./g')
+          esr_base_tag=$(git tag --sort -version:refname | grep "^v${base_regex}\." | head -n1)
           if [ -z "${esr_base_tag}" ]; then
             echo "No version based on ${os_esr_base_version}"
             exit 1
           fi
-          echo "Base tag: ${esr_base_tag}"
+          # Resolve the tag (annotated or lightweight) to the commit it points at
+          base_sha=$(git rev-list -n1 "refs/tags/${esr_base_tag}")
+          if [ -z "${base_sha}" ]; then
+            echo "Could not resolve tag ${esr_base_tag} to a commit"
+            exit 1
+          fi
+          echo "base_tag=${esr_base_tag}" >> "${GITHUB_OUTPUT}"
+          echo "base_sha=${base_sha}" >> "${GITHUB_OUTPUT}"
+          echo "ESR base tag: ${esr_base_tag} (${base_sha})"
           git checkout -b ${{ steps.validate-inputs.outputs.esr_branch }} refs/tags/${esr_base_tag}
-          git submodule update --recursive
-          pushd layers/meta-balena || true > /dev/null 2>&1
-          git checkout -b ${os_esr_branch} ${os_esr_branch}
-          popd || true > /dev/null
+          # Resolve the tip of the meta-balena ESR branch from the remote ref
+          # (explicit, so it cannot be confused with a local branch or tag)
+          git -C layers/meta-balena fetch origin "refs/heads/${os_esr_branch}:refs/remotes/origin/${os_esr_branch}"
+          meta_balena_sha=$(git -C layers/meta-balena rev-parse --verify "refs/remotes/origin/${os_esr_branch}^{commit}")
+          if [ -z "${meta_balena_sha}" ]; then
+            echo "Could not resolve origin/${os_esr_branch} in layers/meta-balena"
+            exit 1
+          fi
+          echo "meta_balena_sha=${meta_balena_sha}" >> "${GITHUB_OUTPUT}"
+          echo "meta-balena origin/${os_esr_branch} at ${meta_balena_sha}"
 
       - name: Setup Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -289,10 +317,12 @@ jobs:
 
       # https://octokit.github.io/rest.js/v21/#git-create-ref
       # https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference
+      # The branch is created at the base tag's commit; the "Declare ESR"
+      # commit is added on top of it below.
       - name: Create ESR branch
         env:
           REF: refs/heads/${{ steps.validate-inputs.outputs.esr_branch }}
-          SHA: ${{ steps.checkout.outputs.commit }}
+          SHA: ${{ steps.select-base.outputs.base_sha }}
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
@@ -312,7 +342,8 @@ jobs:
       - name: Create blobs and tree
         id: create_tree
         env:
-          PARENT_COMMIT_SHA: ${{ steps.checkout.outputs.commit }}
+          PARENT_COMMIT_SHA: ${{ steps.select-base.outputs.base_sha }}
+          META_BALENA_SHA: ${{ steps.select-base.outputs.meta_balena_sha }}
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
@@ -343,19 +374,20 @@ jobs:
               };
             }));
 
-            // Get submodule commit SHA (mode 160000, type commit)
-            const submodulePath = 'layers/meta-balena';
-            const submoduleSha = execSync(`git -C ${submodulePath} rev-parse HEAD`).toString().trim();
-            core.info(`Submodule ${submodulePath} at commit ${submoduleSha}`);
-
+            // Pin layers/meta-balena to the tip of its ESR branch (mode 160000, type commit).
+            // All other submodule pins are inherited from the base tag's tree.
+            const submoduleSha = process.env.META_BALENA_SHA;
+            if (!/^[0-9a-f]{40}$/.test(submoduleSha || '')) {
+              throw new Error(`Invalid meta-balena commit SHA: ${submoduleSha}`);
+            }
+            core.info(`Pinning layers/meta-balena at ${submoduleSha}`);
             const submoduleEntry = {
-              path: submodulePath,
+              path: 'layers/meta-balena',
               mode: '160000',
               type: 'commit',
               sha: submoduleSha
             };
 
-            // Create tree with all entries
             const treeEntries = [...blobEntries, submoduleEntry];
             const { data: tree } = await github.rest.git.createTree({
               ...context.repo,
@@ -372,7 +404,7 @@ jobs:
         id: create_commit
         env:
           TREE_SHA: ${{ steps.create_tree.outputs.sha }}
-          PARENT_COMMIT_SHA: ${{ steps.checkout.outputs.commit }}
+          PARENT_COMMIT_SHA: ${{ steps.select-base.outputs.base_sha }}
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app_token.outputs.token }}
